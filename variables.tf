@@ -16,6 +16,17 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
 }
 
+variable "az_count" {
+  description = "Number of availability zones (and public subnets) to spread across. EKS requires at least 2. Capped by the number of AZs available in the region."
+  type        = number
+  default     = 2
+
+  validation {
+    condition     = var.az_count >= 2
+    error_message = "EKS requires subnets in at least 2 availability zones."
+  }
+}
+
 variable "public_access_cidrs" {
   description = "CIDR blocks allowed to reach the public Kubernetes API endpoint. Ignored when restrict_api_to_local_ip is true."
   type        = list(string)

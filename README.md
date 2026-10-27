@@ -60,6 +60,7 @@ The example defaults to **eu-north-1 (Stockholm)**: the cheapest AWS region in E
 | `name` | Cluster name, also prefixes VPC/IAM resources | `eks-auto` |
 | `kubernetes_version` | Keep on a standard-support version | `1.35` |
 | `vpc_cidr` | CIDR for the dedicated VPC | `10.0.0.0/16` |
+| `az_count` | Number of AZs/public subnets to use (minimum 2, capped at the region's AZ count) | `2` |
 | `public_access_cidrs` | CIDRs allowed to reach the public API endpoint (ignored when `restrict_api_to_local_ip` is true) | `["0.0.0.0/0"]` |
 | `restrict_api_to_local_ip` | Restrict API access to the public IP of the machine running plan/apply (looked up via icanhazip.com) | `false` |
 | `tags` | Tags applied to all resources | `{}` |

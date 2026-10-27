@@ -17,9 +17,15 @@ variable "vpc_cidr" {
 }
 
 variable "public_access_cidrs" {
-  description = "CIDR blocks allowed to reach the public Kubernetes API endpoint. Restrict to your own IP for better security."
+  description = "CIDR blocks allowed to reach the public Kubernetes API endpoint. Ignored when restrict_api_to_local_ip is true."
   type        = list(string)
   default     = ["0.0.0.0/0"]
+}
+
+variable "restrict_api_to_local_ip" {
+  description = "When true, public_access_cidrs is set to the public IP of the machine running plan/apply (looked up via icanhazip.com)."
+  type        = bool
+  default     = false
 }
 
 variable "tags" {

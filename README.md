@@ -60,7 +60,8 @@ The example defaults to **eu-north-1 (Stockholm)**: the cheapest AWS region in E
 | `name` | Cluster name, also prefixes VPC/IAM resources | `eks-auto` |
 | `kubernetes_version` | Keep on a standard-support version | `1.35` |
 | `vpc_cidr` | CIDR for the dedicated VPC | `10.0.0.0/16` |
-| `public_access_cidrs` | CIDRs allowed to reach the public API endpoint | `["0.0.0.0/0"]` |
+| `public_access_cidrs` | CIDRs allowed to reach the public API endpoint (ignored when `restrict_api_to_local_ip` is true) | `["0.0.0.0/0"]` |
+| `restrict_api_to_local_ip` | Restrict API access to the public IP of the machine running plan/apply (looked up via icanhazip.com) | `false` |
 | `tags` | Tags applied to all resources | `{}` |
 
 ## Outputs
@@ -75,5 +76,5 @@ The example defaults to **eu-north-1 (Stockholm)**: the cheapest AWS region in E
 ## Security notes
 
 - Nodes run in public subnets with public IPs; all inbound traffic is blocked by the EKS-managed security groups.
-- The public API endpoint is open to `0.0.0.0/0` by default — set `public_access_cidrs` to your IP range to lock it down.
+- The public API endpoint is open to `0.0.0.0/0` by default — set `restrict_api_to_local_ip = true` to lock it down to the machine running `tofu` (resolved via [icanhazip.com](https://icanhazip.com) at plan/apply time), or set `public_access_cidrs` to a fixed range. Note the IP lookup re-runs on every plan/apply, so if your IP changes, the next apply will update the cluster to match.
 - The identity running `tofu apply` is bootstrapped as a cluster admin via an EKS access entry (`authentication_mode = "API"`).

@@ -1,3 +1,15 @@
+# Optional: lock down the public API endpoint to the runner's own public IP.
+# ipv4.icanhazip.com forces an IPv4 result (EKS expects IPv4 CIDRs).
+data "http" "local_ip" {
+  count = var.restrict_api_to_local_ip ? 1 : 0
+
+  url = "https://ipv4.icanhazip.com"
+}
+
+locals {
+  public_access_cidrs = var.restrict_api_to_local_ip ? ["${chomp(data.http.local_ip[0].response_body)}/32"] : var.public_access_cidrs
+}
+
 resource "aws_eks_cluster" "this" {
   name     = var.name
   role_arn = aws_iam_role.cluster.arn
@@ -38,7 +50,7 @@ resource "aws_eks_cluster" "this" {
     subnet_ids              = aws_subnet.public[*].id
     endpoint_public_access  = true
     endpoint_private_access = true
-    public_access_cidrs     = var.public_access_cidrs
+    public_access_cidrs     = local.public_access_cidrs
   }
 
   tags = var.tags

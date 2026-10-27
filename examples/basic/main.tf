@@ -11,7 +11,8 @@ provider "aws" {
 module "eks_auto" {
   source = "../.."
 
-  name = "eks-auto"
+  name                     = "eks-auto"
+  restrict_api_to_local_ip = true
 }
 
 output "cluster_endpoint" {
